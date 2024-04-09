@@ -851,6 +851,79 @@ class JaccardLevelBase(DistanceFunctionLevelBase):
         )
 
 
+class ListCosineSimilarityBase(DistanceFunctionLevelBase):
+    def __init__(
+        self,
+        col_name: str,
+        distance_threshold: int | float,
+        regex_extract: str = None,
+        set_to_lowercase=False,
+        include_colname_in_charts_label=False,
+        manual_col_name_for_charts_label=None,
+        m_probability=None,
+    ) -> ComparisonLevel:
+        """Represents a comparison level using a jaccard distance function
+
+        Args:
+            col_name (str): Input column name
+            distance_threshold (Union[int, float]): The threshold to use to assess
+                similarity
+            regex_extract (str): Regular expression pattern to evaluate a match on.
+            set_to_lowercase (bool): If True, sets all entries to lowercase.
+            include_colname_in_charts_label (bool, optional): If True, includes
+                col_name in charts label
+            manual_col_name_for_charts_label (str, optional): string to include as
+                 column name in chart label. Acts as a manual overwrite of the
+                 colname when include_colname_in_charts_label is True.
+            m_probability (float, optional): Starting value for m probability.
+                Defaults to None.
+        Examples:
+            === ":simple-duckdb: DuckDB"
+                Comparison level with jaccard score greater than 0.9
+                ``` python
+                import splink.duckdb.comparison_level_library as cll
+                cll.jaccard_level("name", 0.9)
+                ```
+                Comparison level with jaccard score greater than 0.9 on a
+                substring of name column as determined by a regular expression.
+                ``` python
+                import splink.duckdb.comparison_level_library as cll
+                cll.jaccard_level("name", 0.9, regex_extract="^[A-Z]{1,4}")
+                ```
+            === ":simple-apachespark: Spark"
+                Comparison level with jaccard score greater than 0.9
+                ``` python
+                import splink.spark.comparison_level_library as cll
+                cll.jaccard_level("name", 0.9)
+                ```
+                Comparison level with jaccard score greater than 0.9 on a
+                substring of name column as determined by a regular expression.
+                ``` python
+                import splink.spark.comparison_level_library as cll
+                cll.jaccard_level("name", 0.9, regex_extract="^[A-Z]{1,4}")
+                ```
+
+        Returns:
+            ComparisonLevel: A comparison level that evaluates the jaccard similarity
+        """
+        super().__init__(
+            col_name,
+            self._list_cosine_similarity_name,
+            distance_threshold=distance_threshold,
+            regex_extract=regex_extract,
+            set_to_lowercase=set_to_lowercase,
+            higher_is_more_similar=True,
+            include_colname_in_charts_label=include_colname_in_charts_label,
+            m_probability=m_probability,
+        )
+
+        @property
+        def _list_cosine_similarity_name(self):
+            raise NotImplementedError(
+                "Cosine similarity function name not defined on base class"
+            )
+
+
 class ColumnsReversedLevelBase(ComparisonLevel):
     def __init__(
         self,

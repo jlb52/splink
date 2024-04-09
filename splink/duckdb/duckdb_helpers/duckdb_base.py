@@ -79,3 +79,7 @@ class DuckDBBase(DialectBase):
     @property
     def _jaro_winkler_name(self):
         return "jaro_winkler_similarity"
+    
+    @property
+    def _list_cosine_similarity_name(self):
+        return "list_cosine_similarity"

@@ -11,6 +11,7 @@ from ...comparison_level_library import (
     JaroLevelBase,
     JaroWinklerLevelBase,
     LevenshteinLevelBase,
+    ListCosineSimilarityBase,
     NullLevelBase,
     PercentageDifferenceLevelBase,
 )
@@ -25,6 +26,7 @@ from ...comparison_library import (
     JaroAtThresholdsBase,
     JaroWinklerAtThresholdsBase,
     LevenshteinAtThresholdsBase,
+    ListCosineSimilarityAtThresholdsBase,
 )
 from ...comparison_template_library import (
     DateComparisonBase,
@@ -91,6 +93,10 @@ class DuckDBComparisonProperties(DuckDBBase):
     @property
     def _jaccard_level(self):
         return jaccard_level
+    
+    @property
+    def _list_cosine_similarity_level(self):
+        return list_cosine_similarity_level
 
 
 #########################
@@ -135,6 +141,8 @@ class jaro_winkler_level(DuckDBBase, JaroWinklerLevelBase):
 class jaccard_level(DuckDBBase, JaccardLevelBase):
     pass
 
+class list_cosine_similarity_level(DuckDBBase, ListCosineSimilarityBase):
+    pass
 
 class array_intersect_level(DuckDBBase, ArrayIntersectLevelBase):
     pass
@@ -202,6 +210,10 @@ class jaccard_at_thresholds(DuckDBComparisonProperties, JaccardAtThresholdsBase)
     def _distance_level(self):
         return self._jaccard_level
 
+class list_cosine_similarity_at_thresholds(DuckDBComparisonProperties, ListCosineSimilarityAtThresholdsBase):
+    @property
+    def _distance_level(self):
+        return self._list_cosine_similarity_level
 
 class array_intersect_at_sizes(DuckDBComparisonProperties, ArrayIntersectAtSizesBase):
     pass

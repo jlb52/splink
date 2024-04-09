@@ -16,6 +16,7 @@ from .duckdb_helpers.duckdb_comparison_imports import (  # noqa: F401
     jaro_level,
     jaro_winkler_level,
     levenshtein_level,
+    list_cosine_similarity_level,
     null_level,
     percentage_difference_level,
 )

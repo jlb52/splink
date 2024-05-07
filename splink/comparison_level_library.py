@@ -404,11 +404,17 @@ class DistanceFunctionLevelBase(ComparisonLevel):
         if regex_extract:
             col_name_l = self._regex_extract_function(col_name_l, regex_extract)
             col_name_r = self._regex_extract_function(col_name_r, regex_extract)
-
-        sql_cond = (
-            f"{distance_function_name}({col_name_l}, {col_name_r}) "
+        
+        if distance_function_name == "hamming":
+            sql_cond = (
+            f"1 - ({distance_function_name}({col_name_l}, {col_name_r}) / length({col_name_l}))"
             f"{operator} {distance_threshold}"
         )
+        else:
+            sql_cond = (
+                f"{distance_function_name}({col_name_l}, {col_name_r}) "
+                f"{operator} {distance_threshold}"
+            )
 
         if include_colname_in_charts_label:
             if manual_col_name_for_charts_label:

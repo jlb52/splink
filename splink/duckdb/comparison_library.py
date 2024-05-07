@@ -9,4 +9,6 @@ from .duckdb_helpers.duckdb_comparison_imports import (  # noqa: F401
     jaro_at_thresholds,
     jaro_winkler_at_thresholds,
     levenshtein_at_thresholds,
+    list_cosine_similarity_at_thresholds,
+    binary_hamming_similarity_at_thresholds,
 )

@@ -993,6 +993,119 @@ class ListCosineSimilarityAtThresholdsBase(DistanceFunctionAtThresholdsBase):
     def _is_distance_subclass(self):
         return True
 
+class BinaryHammingSimilarityAtThresholdsBase(DistanceFunctionAtThresholdsBase):
+    def __init__(
+        self,
+        col_name: str,
+        distance_threshold_or_thresholds: int | list = [0.9, 0.7],
+        regex_extract: str = None,
+        valid_string_pattern: str = None,
+        set_to_lowercase: bool = False,
+        include_exact_match_level=True,
+        term_frequency_adjustments=False,
+        m_probability_exact_match=None,
+        m_probability_or_probabilities_jw: float | list = None,
+        m_probability_else=None,
+    ) -> Comparison:
+        """A comparison of the data in `col_name` with the jaro_winkler distance used to
+        assess middle similarity levels.
+
+        An example of the output with default arguments and setting
+        `distance_threshold_or_thresholds = [0.9, 0.7]` would be
+
+        - Exact match
+        - Jaro-Winkler distance <= 0.9
+        - Jaro-Winkler distance <= 0.7
+        - Anything else
+
+        Args:
+            col_name (str): The name of the column to compare
+            distance_threshold_or_thresholds (Union[int, list], optional): The
+                threshold(s) to use for the middle similarity level(s).
+                Defaults to [0.9, 0.7].
+            regex_extract (str): Regular expression pattern to evaluate a match on.
+            valid_string_pattern (str): regular expression pattern that if not
+                matched will result in column being treated as a null.
+            include_exact_match_level (bool, optional): If True, include an exact match
+                level. Defaults to True.
+            term_frequency_adjustments (bool, optional): If True, apply term frequency
+                adjustments to the exact match level. Defaults to False.
+            m_probability_exact_match (float, optional): If provided, overrides the
+                default m probability for the exact match level. Defaults to None.
+            m_probability_or_probabilities_jw (Union[float, list], optional):
+                If provided, overrides the default m probabilities
+                for the thresholds specified for given function. Defaults to None.
+            m_probability_else (float, optional): If provided, overrides the
+                default m probability for the 'anything else' level. Defaults to None.
+
+
+        Examples:
+            === ":simple-duckdb: DuckDB"
+                Create comparison with jaro_winkler match levels with similarity
+                score >= 0.9 and >=0.7
+                ``` python
+                import splink.duckdb.comparison_library as cl
+                cl.jaro_winkler_at_thresholds("first_name", [0.9, 0.7])
+                ```
+                Create comparison with jaro_winkler match levels with similarity
+                score =>0.9 and >=0.7 on a substring of name column as determined by
+                a regular expression
+                ``` python
+                import splink.duckdb.comparison_library as cl
+                cl.jaro_winkler_at_thresholds("first_name",
+                                              [0.9, 0.7],
+                                              regex_extract="^[A-Z]"
+                                              )
+                ```
+            === ":simple-apachespark: Spark"
+                Create comparison with jaro_winkler match levels with similarity
+                score >=0.9 and >=0.7
+                ``` python
+                import splink.spark.comparison_library as cl
+                cl.jaro_winkler_at_thresholds("first_name", [0.9, 0.7])
+                ```
+                Create comparison with jaro_winkler match levels with similarity
+                score >=0.9 and >=0.7 on a substring of name column as determined
+                by a regular expression
+                ``` python
+                import splink.spark.comparison_library as cl
+                cl.jaro_winkler_at_thresholds("first_name",
+                                              [0.9, 0.7],
+                                              regex_extract="^[A-Z]"
+                                              )
+                ```
+            === ":simple-sqlite: SQLite"
+                Create comparison with jaro_winkler match levels with similarity
+                score >=0.9 and >=0.7
+                ``` python
+                import splink.sqlite.comparison_library as cl
+                cl.jaro_winkler_at_thresholds("first_name", [0.9, 0.7])
+                ```
+
+        Returns:
+            Comparison: A comparison for Jaro Winkler similarity that can be included
+                in the Splink settings dictionary.
+        """
+
+        super().__init__(
+            col_name,
+            distance_function_name=self._binary_hamming_similarity_name,
+            distance_threshold_or_thresholds=distance_threshold_or_thresholds,
+            regex_extract=regex_extract,
+            valid_string_pattern=valid_string_pattern,
+            set_to_lowercase=set_to_lowercase,
+            higher_is_more_similar=True,
+            include_exact_match_level=include_exact_match_level,
+            term_frequency_adjustments=term_frequency_adjustments,
+            m_probability_exact_match=m_probability_exact_match,
+            m_probability_or_probabilities_thres=m_probability_or_probabilities_jw,
+            m_probability_else=m_probability_else,
+        )
+
+    @property
+    def _is_distance_subclass(self):
+        return True
+
 class ArrayIntersectAtSizesBase(Comparison):
     def __init__(
         self,

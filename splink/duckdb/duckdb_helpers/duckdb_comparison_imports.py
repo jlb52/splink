@@ -12,6 +12,7 @@ from ...comparison_level_library import (
     JaroWinklerLevelBase,
     LevenshteinLevelBase,
     ListCosineSimilarityBase,
+    BinaryHammingSimilarityBase,
     NullLevelBase,
     PercentageDifferenceLevelBase,
 )
@@ -27,6 +28,7 @@ from ...comparison_library import (
     JaroWinklerAtThresholdsBase,
     LevenshteinAtThresholdsBase,
     ListCosineSimilarityAtThresholdsBase,
+    BinaryHammingSimilarityAtThresholdsBase,
 )
 from ...comparison_template_library import (
     DateComparisonBase,
@@ -97,6 +99,10 @@ class DuckDBComparisonProperties(DuckDBBase):
     @property
     def _list_cosine_similarity_level(self):
         return list_cosine_similarity_level
+    
+    @property
+    def _binary_hamming_similarity_level(self):
+        return binary_hamming_similarity_level
 
 
 #########################
@@ -144,6 +150,8 @@ class jaccard_level(DuckDBBase, JaccardLevelBase):
 class list_cosine_similarity_level(DuckDBBase, ListCosineSimilarityBase):
     pass
 
+class binary_hamming_similarity_level(DuckDBBase, BinaryHammingSimilarityBase):
+    pass
 class array_intersect_level(DuckDBBase, ArrayIntersectLevelBase):
     pass
 
@@ -214,6 +222,11 @@ class list_cosine_similarity_at_thresholds(DuckDBComparisonProperties, ListCosin
     @property
     def _distance_level(self):
         return self._list_cosine_similarity_level
+    
+class binary_hamming_similarity_at_thresholds(DuckDBComparisonProperties, BinaryHammingSimilarityAtThresholdsBase):
+    @property
+    def _distance_level(self):
+        return self._binary_hamming_similarity_level
 
 class array_intersect_at_sizes(DuckDBComparisonProperties, ArrayIntersectAtSizesBase):
     pass

@@ -83,3 +83,7 @@ class DuckDBBase(DialectBase):
     @property
     def _list_cosine_similarity_name(self):
         return "list_cosine_similarity"
+    
+    @property
+    def _binary_hamming_similarity_name(self):
+        return "hamming"
